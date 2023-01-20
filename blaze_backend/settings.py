@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config ## foe env variables
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-==i_n^89wh%f&a+h(bp&l9+)4hsyey597c001hdn^q203ss3@t'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -153,8 +154,8 @@ MAX_ATTEMPTS = 1
 MAX_RUN_TIME = 60 * 60 * 3
 
 ######### Linkedin Password #############
-LINKEDIN_EMAIL = 'jrkasinath@gmail.com'
-LINKEDIN_PASSWORD = '11KK*25SI*32!'
+LINKEDIN_EMAIL = config('LINKEDIN_EMAIL')
+LINKEDIN_PASSWORD = config('LINKEDIN_PASSWORD')
 
 ######### Github API ###############
-GITHUB_API = "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"
+GITHUB_API = config('GITHUB_API')
