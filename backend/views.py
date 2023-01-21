@@ -39,12 +39,12 @@ def update_user(email):
         return
 
     print("Updating " + email)
-    Leetcode_update_fn(profile)
-    Github_update_fn(profile)
+    # Leetcode_update_fn(profile)
+    # Github_update_fn(profile)
     LinkedIn_update_fn(profile)
-    Hackerrank_update_fn(profile)
-    Codechef_update_fn(profile)
-    Codeforces_update_fn(profile)
+    # Hackerrank_update_fn(profile)
+    # Codechef_update_fn(profile)
+    # Codeforces_update_fn(profile)
 # update_user("kasinath@student.tce.edu")
 
 def delete():
@@ -110,6 +110,7 @@ class ProfileDetail(mixins.RetrieveModelMixin,
 
 class LeetcodeList(APIView):
     def get(self, request, format=None):
+        update_user("kasinath@student.tce.edu")
         instance = LeetcodeDetail.objects.all()
         serializer = LCDSerializer(instance, many=True)
         return Response(serializer.data)
@@ -134,7 +135,6 @@ class HackerrankList(APIView):
 
 class CodechefList(APIView):
     def get(self, request, format=None):
-        Problems_update_fn()
         instance = CodechefDetail.objects.all()
         serializer = CCDSerializer(instance, many=True)
         return Response(serializer.data)
