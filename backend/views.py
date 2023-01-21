@@ -26,7 +26,7 @@ def update():
         print("Updating " + profiles[i].id.email + " --> " + str(i+1) + " out of " + str(len(profiles)))
         Leetcode_update_fn(profiles[i])
         Github_update_fn(profiles[i])
-        # LinkedIn_update_fn(profiles[i])
+        LinkedIn_update_fn(profiles[i])
         Hackerrank_update_fn(profiles[i])
         Codechef_update_fn(profiles[i])
         Codeforces_update_fn(profiles[i])
@@ -134,7 +134,7 @@ class HackerrankList(APIView):
 
 class CodechefList(APIView):
     def get(self, request, format=None):
-        update()
+        Problems_update_fn()
         instance = CodechefDetail.objects.all()
         serializer = CCDSerializer(instance, many=True)
         return Response(serializer.data)
@@ -156,13 +156,20 @@ class Events(mixins.ListModelMixin, generics.GenericAPIView):
 @api_view(['GET'])
 def ProblemsEasyView(request):
     if request.method == 'GET':
-        instance = Problem.objects.all()[0]
+        instances = Problem.objects.all()
+        if len(instances)==0:
+            return Response([])
+        instance = instances[0]
         return Response(instance.easy)
 
 @api_view(['GET'])
 def ProblemsMediumView(request):
     if request.method == 'GET':
-        instance = Problem.objects.all()[0]
+        instances = Problem.objects.all()
+        if len(instances)==0:
+            return Response([])
+
+        instance = instances[0]
         ret={}
         ret['medium'] = instance.medium
         ret['contest'] = instance.contest
