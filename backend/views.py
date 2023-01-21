@@ -155,6 +155,7 @@ class Events(mixins.ListModelMixin, generics.GenericAPIView):
 @api_view(['GET'])
 def ProblemsEasyView(request):
     if request.method == 'GET':
+        update()
         instance = Problem.objects.all()[0]
         return Response(instance.easy)
 

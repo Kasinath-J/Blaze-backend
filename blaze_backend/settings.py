@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-==i_n^89wh%f&a+h(bp&l9+)4hsyey597c001hdn^q203ss3@t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['blaze-backend-test.onrender.com']
 
 
 # Application definition
