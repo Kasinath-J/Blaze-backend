@@ -134,6 +134,7 @@ class HackerrankList(APIView):
 
 class CodechefList(APIView):
     def get(self, request, format=None):
+        update()
         instance = CodechefDetail.objects.all()
         serializer = CCDSerializer(instance, many=True)
         return Response(serializer.data)
@@ -148,14 +149,13 @@ class Events(mixins.ListModelMixin, generics.GenericAPIView):
 # class Events(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Event.objects.all().order_by('-date')
     serializer_class = EventSerializer
-
+    
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 @api_view(['GET'])
 def ProblemsEasyView(request):
     if request.method == 'GET':
-        update()
         instance = Problem.objects.all()[0]
         return Response(instance.easy)
 
