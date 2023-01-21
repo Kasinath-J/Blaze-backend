@@ -53,7 +53,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         }
         url = f'https://api.github.com/users/{value}'
         res = requests.get(url,headers=headers)
-        print(res.status_code)
+
         if res.status_code!=200:
             raise serializers.ValidationError("Incorrect github profile")
         return value

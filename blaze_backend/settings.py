@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-==i_n^89wh%f&a+h(bp&l9+)4hsyey597c001hdn^q203ss3@t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['blaze-backend-test.onrender.com']
+ALLOWED_HOSTS = ['blaze-backend-test.onrender.com','127.0.0.1']
 
 
 # Application definition
@@ -159,4 +159,4 @@ LINKEDIN_EMAIL = 'jrkasinath@gmail.com'
 LINKEDIN_PASSWORD = '11KK*25SI*32!'
 
 ######### Github API ###############
-GITHUB_API = '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'
+GITHUB_API = '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'
