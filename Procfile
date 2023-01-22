@@ -1,1 +1,0 @@
-web: gunicorn blaze_backend.wsgi --log-file - 

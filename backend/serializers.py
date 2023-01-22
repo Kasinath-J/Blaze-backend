@@ -7,6 +7,7 @@ import random
 from linkedin_api import Linkedin
 from .scraper.user_agent_list import user_agent
 from blaze_backend.settings import LINKEDIN_EMAIL,LINKEDIN_PASSWORD,GITHUB_API
+import http.client
 
 # Create your views here.
 class ProfileSerializer(serializers.ModelSerializer):
@@ -89,6 +90,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             return None
         
         url = "https://www.codechef.com/users/{}".format(value)
+        
+
+
         res = requests.get(url)
         html_doc = res.text
         soup = BeautifulSoup(html_doc, 'html.parser')
