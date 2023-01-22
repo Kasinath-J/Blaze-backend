@@ -110,7 +110,7 @@ class ProfileDetail(mixins.RetrieveModelMixin,
 
 class LeetcodeList(APIView):
     def get(self, request, format=None):
-        update_user("kasinath@student.tce.edu")
+        # update_user("kasinath@student.tce.edu")
         instance = LeetcodeDetail.objects.all()
         serializer = LCDSerializer(instance, many=True)
         return Response(serializer.data)
@@ -376,7 +376,7 @@ def initiateUpdate(request):
     started_time = executed_time
     # started_time = executed_time.replace(minute=4,second=00)
 
-    background_update(schedule=started_time,repeat=5)
+    background_update(schedule=started_time,repeat=30)
 
     return Response({'msg':'Updating started everyday at GMT 19:30',
         'stop':'To stop the backgrountask updating, cancel the console for the command python manage.py process_tasks --sleep SLEEP and change the MAX ATTEMPTS to 1 in settings.py and introduce an error such as 1/0 in background_tasks_function and rerun the command python manage.py process_tasks. Now this function stops',

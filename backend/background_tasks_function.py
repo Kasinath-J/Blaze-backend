@@ -26,8 +26,8 @@ def background_update():
     ################### normal execution ###################################################
 
     print(datetime.now())
-    # print("--------------------------Started to update contest-------------------------------")
-    # Contest_update_fn()
+    print("--------------------------Started to update contest-------------------------------")
+    Contest_update_fn()
     # print("--------------------------Started to update problems-------------------------------")
     # Problems_update_fn()
     # print("--------------------------Started to update profiles-------------------------------")
