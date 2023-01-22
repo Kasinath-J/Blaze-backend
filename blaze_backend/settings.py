@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-==i_n^89wh%f&a+h(bp&l9+)4hsyey597c001hdn^q203ss3@t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['blaze-backend-test.onrender.com','127.0.0.1']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -133,7 +133,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
+
+import os
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -159,4 +164,4 @@ LINKEDIN_EMAIL = 'jrkasinath@gmail.com'
 LINKEDIN_PASSWORD = '11KK*25SI*32!'
 
 ######### Github API ###############
-GITHUB_API = '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'
+GITHUB_API = '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'

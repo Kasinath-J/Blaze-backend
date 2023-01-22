@@ -17,8 +17,6 @@ from datetime import datetime
 import time   
 from django.utils import timezone
 
-import asyncio
-
 # Problems_update_fn()
 # Contest_update_fn()
 
@@ -41,12 +39,12 @@ def update_user(email):
         return
 
     print("Updating " + email)
-    # Leetcode_update_fn(profile)
-    # Github_update_fn(profile)
+    Leetcode_update_fn(profile)
+    Github_update_fn(profile)
     LinkedIn_update_fn(profile)
-    # Hackerrank_update_fn(profile)
-    # Codechef_update_fn(profile)
-    # Codeforces_update_fn(profile)
+    Hackerrank_update_fn(profile)
+    Codechef_update_fn(profile)
+    Codeforces_update_fn(profile)
 # update_user("kasinath@student.tce.edu")
 
 def delete():
@@ -110,15 +108,8 @@ class ProfileDetail(mixins.RetrieveModelMixin,
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
-async def prob_update():
-    Problems_update_fn()
-
 class LeetcodeList(APIView):
     def get(self, request, format=None):
-        # update_user("kasinath@student.tce.edu")
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(prob_update())
-        loop.close()
         instance = LeetcodeDetail.objects.all()
         serializer = LCDSerializer(instance, many=True)
         return Response(serializer.data)
@@ -157,27 +148,20 @@ class Events(mixins.ListModelMixin, generics.GenericAPIView):
 # class Events(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Event.objects.all().order_by('-date')
     serializer_class = EventSerializer
-    
+
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 @api_view(['GET'])
 def ProblemsEasyView(request):
     if request.method == 'GET':
-        instances = Problem.objects.all()
-        if len(instances)==0:
-            return Response([])
-        instance = instances[0]
+        instance = Problem.objects.all()[0]
         return Response(instance.easy)
 
 @api_view(['GET'])
 def ProblemsMediumView(request):
     if request.method == 'GET':
-        instances = Problem.objects.all()
-        if len(instances)==0:
-            return Response([])
-
-        instance = instances[0]
+        instance = Problem.objects.all()[0]
         ret={}
         ret['medium'] = instance.medium
         ret['contest'] = instance.contest
@@ -384,7 +368,7 @@ def initiateUpdate(request):
     started_time = executed_time
     # started_time = executed_time.replace(minute=4,second=00)
 
-    background_update(schedule=started_time,repeat=30)
+    background_update(schedule=started_time,repeat=5)
 
     return Response({'msg':'Updating started everyday at GMT 19:30',
         'stop':'To stop the backgrountask updating, cancel the console for the command python manage.py process_tasks --sleep SLEEP and change the MAX ATTEMPTS to 1 in settings.py and introduce an error such as 1/0 in background_tasks_function and rerun the command python manage.py process_tasks. Now this function stops',
