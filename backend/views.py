@@ -17,6 +17,8 @@ from datetime import datetime
 import time   
 from django.utils import timezone
 
+import asyncio
+
 # Problems_update_fn()
 # Contest_update_fn()
 
@@ -108,9 +110,15 @@ class ProfileDetail(mixins.RetrieveModelMixin,
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
+async def prob_update():
+    Problems_update_fn()
+
 class LeetcodeList(APIView):
     def get(self, request, format=None):
         # update_user("kasinath@student.tce.edu")
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(prob_update())
+        loop.close()
         instance = LeetcodeDetail.objects.all()
         serializer = LCDSerializer(instance, many=True)
         return Response(serializer.data)
