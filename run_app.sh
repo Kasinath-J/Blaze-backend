@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 # start background tasks 
-python manage.py runserver &
+gunicorn blaze_backend.wsgi:application &
 
 python manage.py process_tasks
