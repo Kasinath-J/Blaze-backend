@@ -17,7 +17,6 @@ from datetime import datetime
 import time   
 from django.utils import timezone
 
-
 # Problems_update_fn()
 # Contest_update_fn()
 
@@ -168,9 +167,12 @@ def ProblemsMediumView(request):
         ret['contest'] = instance.contest
         return Response(ret)
 
+import subprocess
+
 @api_view(['GET'])
 def EmailList(request):
     if request.method == 'GET':
+        subprocess.run(["python","manage.py","process_tasks"])
         instance = Profile.objects.all()
         ret=[]
         for inst in instance:
@@ -369,7 +371,7 @@ def initiateUpdate(request):
     started_time = executed_time
     # started_time = executed_time.replace(minute=4,second=00)
 
-    background_update(schedule=started_time,repeat=5)
+    background_update(schedule=started_time,repeat=30)
 
     return Response({'msg':'Updating started everyday at GMT 19:30',
         'stop':'To stop the backgrountask updating, cancel the console for the command python manage.py process_tasks --sleep SLEEP and change the MAX ATTEMPTS to 1 in settings.py and introduce an error such as 1/0 in background_tasks_function and rerun the command python manage.py process_tasks. Now this function stops',
