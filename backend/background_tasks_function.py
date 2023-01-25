@@ -9,7 +9,7 @@ def updateProfiles():
         print("Updating " + profiles[i].id.email + " --> " + str(i+1) + " out of " + str(len(profiles)))
         Leetcode_update_fn(profiles[i])
         Github_update_fn(profiles[i])
-        LinkedIn_update_fn(profiles[i])
+        # LinkedIn_update_fn(profiles[i])
         Hackerrank_update_fn(profiles[i])
         Codechef_update_fn(profiles[i])
         Codeforces_update_fn(profiles[i])
