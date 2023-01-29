@@ -323,8 +323,3 @@ class OfficeBearer(models.Model):
     def __str__(self):        
         return self.position + ' - ' + self.name
 
-class BackgroundTask(models.Model):
-    isWorking = models.BooleanField()
-
-    def __str__(self):        
-        return str(self.isWorking)

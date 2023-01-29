@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import ProfileList,LeetcodeList,ProfileDetail,GithubList,LinkedInList,HackerrankList,CodechefList,CodeForcesList,Events,ProblemsEasyView,ProblemsMediumView,EmailList,User_detail,VerifyEmail,OfficeBearerList
+from .views import ProfileList,LeetcodeList,ProfileDetail,GithubList,LinkedInList,HackerrankList,CodechefList,CodeForcesList,Events,ProblemsEasyView,ProblemsMediumView,EmailList,User_detail,VerifyEmail,OfficeBearerList,updatePlatforms,updateProblemsAndContest
 
-from .views import initiateUpdate
 urlpatterns = [
     path('profile/', ProfileList.as_view()),
     path('profile/<str:pk>/', ProfileDetail.as_view()),
@@ -21,8 +20,9 @@ urlpatterns = [
     path('verifyemail/',VerifyEmail),
 
     path('user/<str:pk>/', User_detail),
-    
-    path('initiateupdate/', initiateUpdate),
 
     path('officebearer/', OfficeBearerList.as_view()),
+    
+    path('update/<str:pk>/', updatePlatforms),
+    path('updateproblemscontest/',updateProblemsAndContest),
 ]

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import NewUser,Profile,LeetcodeDetail,GithubDetail,LinkedInDetail,HackerrankDetail,CodechefDetail,CodeforcesDetail,Event,Problem,OfficeBearer,BackgroundTask
+from .models import NewUser,Profile,LeetcodeDetail,GithubDetail,LinkedInDetail,HackerrankDetail,CodechefDetail,CodeforcesDetail,Event,Problem,OfficeBearer
 from django.forms import TextInput, Textarea, CharField
 from django.db import models
 from django.contrib.auth.admin import UserAdmin
@@ -38,5 +38,4 @@ admin.site.register(CodechefDetail)
 admin.site.register(CodeforcesDetail)
 admin.site.register(Event)   
 admin.site.register(Problem)   
-admin.site.register(OfficeBearer)   
-admin.site.register(BackgroundTask)   
+admin.site.register(OfficeBearer)    

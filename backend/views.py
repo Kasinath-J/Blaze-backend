@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .serializers import ProfileSerializer,LCDSerializer,GHDSerializer,LIDSerializer,HRDSerializer,CCDSerializer,CFDSerializer,EventSerializer,OfficeBearerSerializer
-from .models import Profile,LeetcodeDetail,GithubDetail,LinkedInDetail,HackerrankDetail,CodechefDetail,CodeforcesDetail,Problem,Event,NewUser,OfficeBearer,BackgroundTask
+from .models import Profile,LeetcodeDetail,GithubDetail,LinkedInDetail,HackerrankDetail,CodechefDetail,CodeforcesDetail,Problem,Event,NewUser,OfficeBearer
 
-from .scraper.update import Leetcode_update_fn,Github_update_fn,LinkedIn_update_fn,Hackerrank_update_fn,Codechef_update_fn,Codeforces_update_fn,Contest_update_fn,Problems_update_fn
+from .update import Leetcode_update_fn,Github_update_fn,LinkedIn_update_fn,Hackerrank_update_fn,Codechef_update_fn,Codeforces_update_fn
+# ,Contest_update_fn,Problems_update_fn
 
 from rest_framework import mixins,generics,status
 from rest_framework.decorators import api_view
@@ -11,7 +12,6 @@ from rest_framework.views import APIView
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, IsAuthenticatedOrReadOnly, BasePermission, IsAdminUser, DjangoModelPermissions
 
 import jwt
-from .background_tasks_function import background_update
 
 from datetime import datetime
 import time   
@@ -20,55 +20,55 @@ from django.utils import timezone
 # Problems_update_fn()
 # Contest_update_fn()
 
-def update():
-    profiles = Profile.objects.all()
-    for i in range(len(profiles)):
-        print("Updating " + profiles[i].id.email + " --> " + str(i+1) + " out of " + str(len(profiles)))
-        Leetcode_update_fn(profiles[i])
-        Github_update_fn(profiles[i])
-        LinkedIn_update_fn(profiles[i])
-        Hackerrank_update_fn(profiles[i])
-        Codechef_update_fn(profiles[i])
-        Codeforces_update_fn(profiles[i])
-# update()
+# def update():
+#     profiles = Profile.objects.all()
+#     for i in range(len(profiles)):
+#         print("Updating " + profiles[i].id.email + " --> " + str(i+1) + " out of " + str(len(profiles)))
+#         Leetcode_update_fn(profiles[i])
+#         Github_update_fn(profiles[i])
+#         LinkedIn_update_fn(profiles[i])
+#         Hackerrank_update_fn(profiles[i])
+#         Codechef_update_fn(profiles[i])
+#         Codeforces_update_fn(profiles[i])
+# # update()
 
-def update_user(email):
-    try:
-        profile = Profile.objects.get(id=email)
-    except:
-        return
+# def update_user(email):
+#     try:
+#         profile = Profile.objects.get(id=email)
+#     except:
+#         return
 
-    print("Updating " + email)
-    Leetcode_update_fn(profile)
-    Github_update_fn(profile)
-    LinkedIn_update_fn(profile)
-    Hackerrank_update_fn(profile)
-    Codechef_update_fn(profile)
-    Codeforces_update_fn(profile)
-# update_user("kasinath@student.tce.edu")
+#     print("Updating " + email)
+#     Leetcode_update_fn(profile)
+#     Github_update_fn(profile)
+#     LinkedIn_update_fn(profile)
+#     Hackerrank_update_fn(profile)
+#     Codechef_update_fn(profile)
+#     Codeforces_update_fn(profile)
+# # update_user("kasinath@student.tce.edu")
 
-def delete():
-    LeetcodeDetail.objects.all().delete()
-    GithubDetail.objects.all().delete()
-    LinkedInDetail.objects.all().delete()
-    HackerrankDetail.objects.all().delete()
-    CodechefDetail.objects.all().delete()
-    CodeforcesDetail.objects.all().delete()
-    print("Deleted scraped data")
-# delete()
+# def delete():
+#     LeetcodeDetail.objects.all().delete()
+#     GithubDetail.objects.all().delete()
+#     LinkedInDetail.objects.all().delete()
+#     HackerrankDetail.objects.all().delete()
+#     CodechefDetail.objects.all().delete()
+#     CodeforcesDetail.objects.all().delete()
+#     print("Deleted scraped data")
+# # delete()
 
-def delete_user(email):
-    LeetcodeDetail.objects.filter(profile__id=email).delete()
-    GithubDetail.objects.filter(profile__id=email).delete()
-    LinkedInDetail.objects.filter(profile__id=email).delete()
-    HackerrankDetail.objects.filter(profile__id=email).delete()
-    CodechefDetail.objects.filter(profile__id=email).delete()
-    CodeforcesDetail.objects.filter(profile__id=email).delete()
-    print("Deleted scraped data of " + email)
-# delete_user("panchumarthivabhinav@gmail.com")
+# def delete_user(email):
+#     LeetcodeDetail.objects.filter(profile__id=email).delete()
+#     GithubDetail.objects.filter(profile__id=email).delete()
+#     LinkedInDetail.objects.filter(profile__id=email).delete()
+#     HackerrankDetail.objects.filter(profile__id=email).delete()
+#     CodechefDetail.objects.filter(profile__id=email).delete()
+#     CodeforcesDetail.objects.filter(profile__id=email).delete()
+#     print("Deleted scraped data of " + email)
+# # delete_user("panchumarthivabhinav@gmail.com")
 
 class ProfileList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):   
-    permission_classes = [IsAdminUser] 
+
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -154,25 +154,45 @@ class Events(mixins.ListModelMixin, generics.GenericAPIView):
 
 @api_view(['GET'])
 def ProblemsEasyView(request):
+    
     if request.method == 'GET':
-        instance = Problem.objects.all()[0]
-        return Response(instance.easy)
+        try:
+            instance = Problem.objects.all()[0]
+            return Response(instance.easy)
+        
+        except:
+            try:
+                instance = Problem(total_easy=614,total_medium=1335,total_hard=556,weekly_contest_no=323,biweekly_contest_no=93)
+                instance.save()    
+                return Response(None)
+            except:
+                return Response(None)
+
 
 @api_view(['GET'])
 def ProblemsMediumView(request):
     if request.method == 'GET':
-        instance = Problem.objects.all()[0]
-        ret={}
-        ret['medium'] = instance.medium
-        ret['contest'] = instance.contest
-        return Response(ret)
+        try:
+            instance = Problem.objects.all()[0]
+            ret={}
+            ret['medium'] = instance.medium
+            ret['contest'] = instance.contest
+            return Response(ret)
+        
+        except:
+            try:
+                instance = Problem(total_easy=614,total_medium=1335,total_hard=556,weekly_contest_no=323,biweekly_contest_no=93)
+                instance.save()    
+                return Response(None)
+            except:
+                return Response(None)
 
-import subprocess
+
+
 
 @api_view(['GET'])
 def EmailList(request):
     if request.method == 'GET':
-        subprocess.run(["python","manage.py","process_tasks"])
         instance = Profile.objects.all()
         ret=[]
         for inst in instance:
@@ -342,42 +362,152 @@ class OfficeBearerList(APIView):
         return Response(serializer.data)
 
 
-@api_view(['GET'])
-def initiateUpdate(request):
+@api_view(['GET','PUT'])
+def updatePlatforms(request,pk):
 
-    instances = BackgroundTask.objects.all()
+    if request.method == 'GET':
 
-    if len(instances)==0:
-        instance = BackgroundTask()
-        instance.isWorking=False  
-        instance.save()
+        ret = []
+        profile_instances = Profile.objects.all()
+        for profile in profile_instances:
+            print(profile)
+            dct={}
 
-    else:
-        instance = instances[0]
+            dct['id'] = profile.id.email
+            dct['name'] = profile.name
+            dct['leetcode'] = profile.leetcode
+            dct['github'] = profile.github
+            dct['linkedin'] = profile.linkedin
+            dct['hackerrank'] = profile.hackerrank
+            dct['codechef'] = profile.codechef
+            dct['codeforces'] = profile.codeforces
+
+            if profile.leetcode:
+                try:
+                    lc_instance = LeetcodeDetail.objects.get(profile__id__email = profile.id.email)
+                    dct['leetcode_date'] =  lc_instance.date
+                except:
+                    pass
 
 
-    if instance.isWorking==True:
-        return Response({'msg':'Already updating everyday at GMT 19:30.',
-        'stop':'To stop the backgrountask updating, cancel the console for the command python manage.py process_tasks --sleep SLEEP and change the MAX ATTEMPTS to 1 in settings.py and introduce an error such as 1/0 in background_tasks_function and rerun the command python manage.py process_tasks. Now this function stops',
-        'to run again':'Change the MAX ATTEMPTS. remove the error from this function, uncheck (or convert to false ) the fisrt entry in backgroound tasks model, and reload the initiaeupload page.'
-        })
+            if profile.github:
+                try:
+                    gh_instance = GithubDetail.objects.get(profile__id__email = profile.id.email)                
+                    dct['github_date'] =  gh_instance.date
+                except:
+                    pass
+
+            if profile.linkedin:
+                try:
+                    li_instance = LinkedInDetail.objects.get(profile__id__email = profile.id.email)
+                    dct['linkedin_date'] = li_instance.date
+                except:
+                    pass
+
+            if profile.hackerrank:
+                try:
+                    hr_instance = HackerrankDetail.objects.get(profile__id__email = profile.id.email)
+                    dct['hackerrank_date'] = hr_instance.date
+                except:
+                    pass
+
+            if profile.codechef:
+                try:
+                    cc_instance = CodechefDetail.objects.get(profile__id__email = profile.id.email)
+                    dct['codechef_date'] = cc_instance.date
+                except:
+                    pass
+
+            if profile.codeforces:
+                try:
+                    cf_instance = CodeforcesDetail.objects.get(profile__id__email = profile.id.email)
+                    dct['codeforces_date'] = cf_instance.date
+                except:
+                    pass
+            
+            ret.append(dct)
+
+        print(ret)
+        return Response(ret)
+
+    if request.method == 'PUT':
+        email = request.data['id']
+        try:
+            Leetcode_update_fn(email,request.data['leetcode'])  
+            Github_update_fn(email,request.data['github'])  
+            LinkedIn_update_fn(email,request.data['linkedin'])  
+            Hackerrank_update_fn(email,request.data['hackerrank'])  
+            Codechef_update_fn(email,request.data['codechef'])  
+            Codeforces_update_fn(email,request.data['codeforces'])  
+
+
+            return Response({})
+        except Profile.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     
-    instance.isWorking=True
-    instance.save() 
+@api_view(['PUT','GET'])
+def updateProblemsAndContest(request):
 
+    if request.method == 'GET':
 
-    executed_time = timezone.now()
-    started_time = executed_time
-    # started_time = executed_time.replace(minute=4,second=00)
+        ret={
+            "total_easy":614,
+            "total_medium":1335,
+            "total_hard":556,
+            "weekly_contest_no":323,
+            "biweekly_contest_no":93,
+        }
 
-    background_update(schedule=started_time)
+        try:
+            instance = Problem.objects.all()[0]        
+            ret={
+                "total_easy":instance.total_easy,
+                "total_medium":instance.total_medium,
+                "total_hard":instance.total_hard,
+                "weekly_contest_no":instance.weekly_contest_no,
+                "biweekly_contest_no":instance.biweekly_contest_no,
+                "date":instance.date,
+            }
+            return Response(ret)
 
-    return Response({'msg':'Updating started everyday at GMT 19:30',
-        'stop':'To stop the backgrountask updating, cancel the console for the command python manage.py process_tasks --sleep SLEEP and change the MAX ATTEMPTS to 1 in settings.py and introduce an error such as 1/0 in background_tasks_function and rerun the command python manage.py process_tasks. Now this function stops',
-        'to run again':'Change the MAX ATTEMPTS. remove the error from this function, uncheck (or convert to false ) the fisrt entry in backgroound tasks model, and reload the initiaeupload page.'
-        })
+        except:
 
-    
-    # started_time = executed_time.replace(hour=19,minute=30,second=00)
-    # background_update(schedule=started_time,repeat=60*60*3)    
+            try:
+                instance = Problem(total_easy=614,total_medium=1335,total_hard=556,weekly_contest_no=323,biweekly_contest_no=93)
+                instance.save()    
+                return Response(ret)
+
+            except:
+                return Response(None)
+
+    if request.method == 'PUT':
+
+        instances = Problem.objects.all()
+        if len(instances)==0:
+            instance = Problem(total_easy=614,total_medium=1335,total_hard=556,weekly_contest_no=323,biweekly_contest_no=93)
+            instance.save()
+            return Response(None)
+        
+        else:
+            try:
+                instance = Problem.objects.all()[0]
+
+                cur_Date = datetime.datetime.now(datetime.timezone.utc).date()
+                d = instance.date    
+                if  d == cur_Date:
+                    return Response(None)
+
+                instance.total_easy = request.data['total_easy']
+                instance.total_medium = request.data['total_medium']
+                instance.total_hard = request.data['total_hard']
+                instance.weekly_contest_no = request.data['weekly_contest_no']
+                instance.biweekly_contest_no = request.data['biweekly_contest_no']
+                instance.contest = request.data['contest']
+                instance.easy = request.data['problemsEasy']
+                instance.medium = request.data['problemsMedium'] 
+
+                instance.save()
+
+            except:
+                return Response(None)

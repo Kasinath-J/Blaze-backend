@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-# from decouple import config ## foe env variables
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +25,7 @@ SECRET_KEY = 'django-insecure-==i_n^89wh%f&a+h(bp&l9+)4hsyey597c001hdn^q203ss3@t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['blaze-backend-test.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -43,7 +42,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     "corsheaders",
-    'background_task',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +131,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -150,13 +147,9 @@ AUTH_USER_MODEL = 'backend.NewUser'
 ######### cors ##########
 CORS_ALLOW_ALL_ORIGINS = True
 
-######## background tasks ##############
-MAX_ATTEMPTS = 1
-MAX_RUN_TIME = 60 * 60 * 3
-
 ######### Linkedin Password #############
 LINKEDIN_EMAIL = 'jrkasinath@gmail.com'
 LINKEDIN_PASSWORD = '11KK*25SI*32!'
 
 ######### Github API ###############
-GITHUB_API = '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'
+GITHUB_API = "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"
