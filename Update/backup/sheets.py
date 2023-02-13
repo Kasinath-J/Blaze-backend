@@ -17,6 +17,7 @@ service = discovery.build('sheets','v4',credentials=credentials)
 def backup():
 
     # Backingup Profile details
+    print("Backing up User and Profile Details")
     try:        
    
         profiles = Profile.objects.all()
@@ -51,6 +52,7 @@ def backup():
         print(e)
     
     # Backingup Events details
+    print("Backing up Events Details")
     try:        
    
         events = Event.objects.all()
@@ -88,6 +90,7 @@ def backup():
         print(e)
 
     # Backingup OfficeBearers details
+    print("Backing up OfficeBearers Details")
     try:        
    
         bearers = OfficeBearer.objects.all()
@@ -125,6 +128,7 @@ def scratchUpdate():
     academic_year_choices = ["2020-2021","2021-2022","2022-2023","2023-2024","2024-2025","2025-2026","2026-2027","2027-2028","2028-2029","2029-2030","2030-2031"]
 
     # Updating Profile details
+    print("Scratch Updating User and Profile Details")
     try:
         range_name = 'Profiles!A2:M250'
         response= service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
@@ -181,6 +185,7 @@ def scratchUpdate():
 
     
     # Updating Event details
+    print("Scratch Event Details")
     try:
         range_name = 'Events!A2:M250'
         response= service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
@@ -230,6 +235,7 @@ def scratchUpdate():
 
 
     # Updating OfficeBearer details
+    print("Scratch Updating OfficeBearer Details")
     try:
         range_name = 'Bearers!A2:M250'
         response= service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()

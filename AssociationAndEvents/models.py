@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime
-from django.conf import settings
 from UsersAndProfile.models import Profile
+from django.utils import timezone
 
 class Event(models.Model):
 
@@ -13,7 +13,7 @@ class Event(models.Model):
         ("ASI","Anaytics Society of India"),
     )
 
-    date = models.DateField(default=datetime.now())
+    date = models.DateField(default=timezone.now)
     name = models.CharField(max_length=50,primary_key=True)
     officetype = models.CharField(max_length = 100,choices = office_choices,default = 'CSBS',blank=True)
     description = models.TextField(null=True,blank=True)
