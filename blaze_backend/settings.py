@@ -11,21 +11,33 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+
+
+###########################  Newly Added For env file############################
+from dotenv import load_dotenv
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
+###################################################################
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-==i_n^89wh%f&a+h(bp&l9+)4hsyey597c001hdn^q203ss3@t'
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+debug = True if str(os.getenv('DEBUG'))=="True" else False
+DEBUG = debug
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [str(os.getenv('HOST'))]
 
 
 # Application definition
@@ -38,10 +50,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'backend',
-
+    'UsersAndProfile',
+    'Portfolio',
+    'Problems',
+    'AssociationAndEvents',
+    'PlatformDetails',
+    'Update',
+    
     'rest_framework',
-    "corsheaders",
+    'background_task',  ## Used for scrapchupdate from Google sheets
 ]
 
 MIDDLEWARE = [
@@ -52,8 +69,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'blaze_backend.urls'
@@ -84,13 +99,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        ############### added ###############
-        'OPTIONS': {
-            'timeout': 60, # in seconds
-        }
-        ############### added ###############
-    },
-    
+    }
 }
 
 
@@ -122,9 +131,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-###########################  Every operation takes place according to GMT and not IST ###########################################
 USE_TZ = True
-
 
 
 # Static files (CSS, JavaScript, Images)
@@ -138,18 +145,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 ##########################  NEWLY ADDED  #################################
 
 ######## custom user model #############
-AUTH_USER_MODEL = 'backend.NewUser'
+AUTH_USER_MODEL = 'UsersAndProfile.NewUser'
 
-######### cors ##########
-CORS_ALLOW_ALL_ORIGINS = True
-
-######### Linkedin Password #############
-LINKEDIN_EMAIL = 'jrkasinath@gmail.com'
-LINKEDIN_PASSWORD = '11KK*25SI*32!'
-
-######### Github API ###############
-GITHUB_API = "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"
+#########################  BackgrounTask Updated #############################
+MAX_RUN_TIME = 60*60*3
+MAX_ATTEMPTS = 2
