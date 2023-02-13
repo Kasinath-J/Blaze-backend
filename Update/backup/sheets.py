@@ -9,13 +9,13 @@ from UsersAndProfile.models import Profile,NewUser
 from AssociationAndEvents.models import OfficeBearer,Event
 
 scopes = ['https://www.googleapis.com/auth/spreadsheets']
-secret_file = os.path.join(os.path.dirname(__file__),r"client_secret.json")
+secret_file = os.path.join(os.getcwd(),r"client_secret.json")
 spreadsheet_id = '1L_N2j8EHeNIoHhLf6xBdlv_qVQwekNlFz5ZwJx-DjO8'
 credentials = service_account.Credentials.from_service_account_file(secret_file,scopes=scopes)
 service = discovery.build('sheets','v4',credentials=credentials)
 
 def backup():
-
+    
     # Backingup Profile details
     print("Backing up User and Profile Details")
     try:        
