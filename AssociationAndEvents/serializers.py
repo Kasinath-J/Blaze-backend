@@ -11,6 +11,9 @@ class EventSerializer(serializers.ModelSerializer):
         return obj.date.strftime("%a %b %d %Y")
 
 class OfficeBearerSerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(source='profile.name')
     class Meta:
         model = OfficeBearer
-        fields = '__all__'
+        fields = ['name','position','img','rank','present_academic_year','officetype']
+

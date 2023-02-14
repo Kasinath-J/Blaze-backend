@@ -54,7 +54,7 @@ class OfficeBearer(models.Model):
         ("ASI","Anaytics Society of India"),
     )
 
-    id = models.OneToOneField(Profile,primary_key=True,on_delete=models.CASCADE)
+    profile = models.OneToOneField(Profile,primary_key=True,on_delete=models.CASCADE)
     position = models.CharField(max_length=70,null=True,blank=True,)
     # name = models.CharField(max_length=70,primary_key=True)
     img = models.URLField(max_length=400,null=True,blank=True)
@@ -63,6 +63,6 @@ class OfficeBearer(models.Model):
     officetype = models.CharField(max_length = 100,choices = office_choices,default = 'CSBS',blank=True)
 
     def __str__(self):        
-        return self.officetype + '-' + self.position + ' - ' + self.id.id.email
+        return self.officetype + '-' + self.position + ' - ' + self.profile.id.email
 
 

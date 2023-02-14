@@ -59,6 +59,8 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'background_task',  ## Used for scrapchupdate from Google sheets
+
+    "corsheaders",  
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "corsheaders.middleware.CorsMiddleware",  ## For cors
 ]
 
 ROOT_URLCONF = 'blaze_backend.urls'
@@ -153,3 +157,11 @@ AUTH_USER_MODEL = 'UsersAndProfile.NewUser'
 #########################  BackgrounTask Updated #############################
 MAX_RUN_TIME = 60*60*3
 MAX_ATTEMPTS = 2
+
+
+######################### CORS Headers #############################
+
+CORS_ALLOWED_ORIGINS = [
+    # str(os.getenv('CORS_HEADER_LOCALHOST')),
+    str(os.getenv('CORS_HEADER_URL')),
+]

@@ -18,14 +18,13 @@ def VerifyEmail(request):
         # If credentials expires after 1hr
         exp_time = decoded['exp']
         cur_time = int(time.time())
-        if cur_time<exp_time:
+        if cur_time>exp_time:
             return Response(False)
 
-
         requested_email = decoded['email']
-
         send_Data = False
         try:
+            # checking whether the requested email has a registereed account
             instance = Profile.objects.get(pk=requested_email)
             send_Data = True
         except:

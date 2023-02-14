@@ -6,6 +6,7 @@ from rest_framework import status
 from UsersAndProfile.models import Profile
 from PlatformDetails.models import LeetcodeDetail,LinkedInDetail,GithubDetail,HackerrankDetail,CodechefDetail,CodeforcesDetail
 from Problems.models import Problem
+from AssociationAndEvents.models import OfficeBearer
 
 @api_view(['GET'])
 def PortfolioDetail(request, pk):
@@ -16,10 +17,22 @@ def PortfolioDetail(request, pk):
     except Profile.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    office_type_and_position = None
+    try:
+        office_bearer = OfficeBearer.objects.get(pk=profile_data)
+        office_type_and_position = {
+            "officetype" : office_bearer.officetype,
+            "position" : office_bearer.position
+        }
+    except:
+        pass
+
     if request.method == 'GET':
         data={}
         data["name"] = None
         data["year"] = None
+        data["asi"] = False
+        data["office_bearer"] = None
         data["profile"] = {}
         data["profile"]["leetcode"] = None
         data["profile"]["github"] = None
@@ -33,6 +46,8 @@ def PortfolioDetail(request, pk):
 
         data["name"] =profile_data.name
         data["year"] =profile_data.id.year
+        data["asi"] =profile_data.asi
+        data["office_bearer"] = office_type_and_position
 
         
         temp = profile_data.__dict__
