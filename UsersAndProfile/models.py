@@ -75,6 +75,7 @@ class Profile(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     id = models.OneToOneField(settings.AUTH_USER_MODEL,primary_key=True,on_delete=models.CASCADE)
     asi = models.BooleanField(null=True,blank=True,default=False)
+
     name = models.CharField(max_length=150, unique=False,null=True,blank=True)
     leetcode = models.CharField(null=True,blank=True,max_length=40)
     github = models.CharField(null=True,blank=True,max_length=40)
@@ -82,6 +83,14 @@ class Profile(models.Model):
     hackerrank = models.CharField(null=True,blank=True,max_length=40)
     codechef = models.CharField(null=True,blank=True,max_length=40)
     codeforces = models.CharField(null=True,blank=True,max_length=40)
+
+    def default_name(self):
+        return self.id.email.split("@")[0]
+
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = self.default_name()
+        super(Profile, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.id.email}"
