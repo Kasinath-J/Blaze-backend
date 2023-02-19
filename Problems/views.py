@@ -15,7 +15,7 @@ def ProblemsEasyView(request):
             try:
                 instance = Problem(total_easy=614,total_medium=1335,total_hard=556,weekly_contest_no=323,biweekly_contest_no=93)
                 instance.save()    
-                return Response(None)
+                return Response(instance["easy"])
             except:
                 return Response(None)
 
@@ -33,8 +33,11 @@ def ProblemsMediumView(request):
         except:
             try:
                 instance = Problem(total_easy=614,total_medium=1335,total_hard=556,weekly_contest_no=323,biweekly_contest_no=93)
-                instance.save()    
-                return Response(None)
+                instance.save()  
+                ret={}
+                ret['medium'] = instance.medium
+                ret['contest'] = instance.contest
+                return Response(ret)  
             except:
                 return Response(None)
 

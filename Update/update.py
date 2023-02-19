@@ -107,7 +107,6 @@ def LinkedIn_update_fn(email,data):
                 return
 
         try:
-            li_instance.img_url = data['img_url']
             li_instance.aboutus = data['aboutus']
             li_instance.headline = data['headline']
             li_instance.geoLocationName = data['geoLocationName']
@@ -117,7 +116,6 @@ def LinkedIn_update_fn(email,data):
             li_instance.projects = data['projects']
             li_instance.honors = data['honors']
             li_instance.publications = data['publications']
-            li_instance.skills = data['skills']
             li_instance.connectionsCount = data['connectionsCount']
         
             li_instance.save() 

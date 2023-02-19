@@ -15,6 +15,11 @@ spreadsheet_id = '1L_N2j8EHeNIoHhLf6xBdlv_qVQwekNlFz5ZwJx-DjO8'
 credentials = service_account.Credentials.from_service_account_file(secret_file,scopes=scopes)
 service = discovery.build('sheets','v4',credentials=credentials)
 
+def checkNone(s):
+    if s=="":
+        return None
+    return s
+
 def backup():
     # Backingup Profile details
     print("Backing up User and Profile Details")
@@ -168,13 +173,13 @@ def scratchUpdate():
 
                 try:
                     profile.asi = True if res[2]=='TRUE' else False
-                    profile.name = res[3]
-                    profile.leetcode = res[4]
-                    profile.github = res[5]
-                    profile.linkedin = res[6]
-                    profile.hackerrank = res[7]
-                    profile.codechef = res[8]
-                    profile.codeforces = res[9]
+                    profile.name = checkNone(res[3])
+                    profile.leetcode = checkNone(res[4])
+                    profile.github = checkNone(res[5])
+                    profile.linkedin = checkNone(res[6])
+                    profile.hackerrank = checkNone(res[7])
+                    profile.codechef = checkNone(res[8])
+                    profile.codeforces = checkNone(res[9])
 
                     profile.save()
                 except:
@@ -214,17 +219,17 @@ def scratchUpdate():
                     date = datetime.date(int(res[1].split('/')[2]), int(res[1].split('/')[1]), int(res[1].split('/')[0]))
                     event.date = date
                     event.officetype = res[2] if res[2] in office_choices else "CSBS"
-                    event.description = res[3]
-                    event.winner1 = res[4]
-                    event.winner2 = res[5]
-                    event.winner3 = res[6]
-                    event.winner4 = res[7]
-                    event.winner5 = res[8]
-                    event.imageUrl1 = res[9]
-                    event.imageUrl2 = res[10]
-                    event.imageUrl3 = res[11]
-                    event.imageUrl4 = res[12]
-                    event.imageUrl5 = res[13]
+                    event.description = checkNone(res[3])
+                    event.winner1 = checkNone(res[4])
+                    event.winner2 = checkNone(res[5])
+                    event.winner3 = checkNone(res[6])
+                    event.winner4 = checkNone(res[7])
+                    event.winner5 = checkNone(res[8])
+                    event.imageUrl1 = checkNone(res[9])
+                    event.imageUrl2 = checkNone(res[10])
+                    event.imageUrl3 = checkNone(res[11])
+                    event.imageUrl4 = checkNone(res[12])
+                    event.imageUrl5 = checkNone(res[13])
                     event.save()
                 
                 except:
@@ -247,24 +252,28 @@ def scratchUpdate():
             # To make all list of even count and to avoid exception
             l = len(res)
             for i in range(26-l):
-                res.append("")        
+                res.append("")
 
             if isinstance(res[0], str): #checking the type as string
                 
                 try:
-                    profile = Profile.objects.get(id__email=res[0])                
+                    profile = Profile.objects.get(pk=res[0])                
+
+                    bearer = None
 
                     try:
-                        bearer = OfficeBearer.objects.get(id=profile)
+                        b = OfficeBearer.objects.get(profile=profile)
+                        bearer = b
                     
                     except:
-                        bearer = OfficeBearer(id=profile)
-                        bearer.save()
+                        b = OfficeBearer(profile=profile)
+                        b.save()
+                        bearer = b
 
                     try:
-                        bearer.position = res[1]
-                        bearer.img = res[2]
-                        bearer.rank = res[3]
+                        bearer.position = checkNone(res[1])
+                        bearer.img = checkNone(res[2])
+                        bearer.rank = checkNone(res[3])
                         bearer.present_academic_year = res[4] if res[4] in academic_year_choices else "2022-2023"
                         bearer.officetype = res[5] if res[5] in office_choices else "CSBS"
                         bearer.save()
@@ -278,4 +287,4 @@ def scratchUpdate():
     except:
         print("error in Updating OfficeBearer details")
 
-
+    print("-----------------Finished Updating---------------------")

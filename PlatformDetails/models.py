@@ -64,7 +64,6 @@ class GithubDetail(models.Model):
 class LinkedInDetail(models.Model):
     date = models.DateField(auto_now=True)
     profile = models.OneToOneField(Profile,primary_key=True,on_delete=models.CASCADE)
-    img_url = models.CharField(null=True,blank=True,max_length=200)
     aboutus = models.TextField(null=True,blank=True)
     headline = models.CharField(null=True,blank=True,max_length=250)
     geoLocationName = models.CharField(null=True,blank=True,max_length=200)
@@ -74,7 +73,6 @@ class LinkedInDetail(models.Model):
     projects = models.JSONField(null=True,blank=True)
     honors = models.JSONField(null=True,blank=True)
     publications = models.JSONField(null=True,blank=True)
-    skills = models.JSONField(null=True,blank=True)
     connectionsCount = models.SmallIntegerField(null=True,blank=True)
 
     @property
@@ -84,20 +82,18 @@ class LinkedInDetail(models.Model):
             score+=10
         if self.experience!=None:
             score+=len(self.experience)*20        
-        if self.skills!=None:
-            score+=len(self.skills)*6
+        if self.publications!=None:
+            score+=len(self.publications)*8
+        if self.honors!=None:
+            score+=len(self.honors)*6
         if self.certifications!=None:
-            score+=len(self.certifications)*4
+            score+=len(self.certifications)*5
         if self.projects!=None:
             score+=len(self.projects)*4
-        if self.honors!=None:
-            score+=len(self.honors)*4
-        if self.publications!=None:
-            score+=len(self.publications)*4
         if self.education!=None:
-            score+=len(self.education)*3
+            score+=len(self.education)*4
         if self.connectionsCount!=None:
-            score+=self.connectionsCount
+            score+=self.connectionsCount*0.25
         return score
 
     def __str__(self):

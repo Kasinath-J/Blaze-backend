@@ -162,6 +162,5 @@ MAX_ATTEMPTS = 2
 ######################### CORS Headers #############################
 
 CORS_ALLOWED_ORIGINS = [
-    # str(os.getenv('CORS_HEADER_LOCALHOST')),
-    str(os.getenv('CORS_HEADER_URL')),
+    str(os.getenv('CORS_HEADERS')),
 ]

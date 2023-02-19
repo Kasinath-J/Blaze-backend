@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import updatePlatforms,updateProblemsAndContest,scraptchUpdate
+from .views import updatePlatforms,updateProblemsAndContest,scratch
 
 urlpatterns = [
 
     # Used to scratch update profile data from google sheets
-    path('scratch/',scraptchUpdate),
+    path('scratch/',scratch),
 
     # Used to retreive profile data and update it rthrough get and put
     path('user/<str:pk>/', updatePlatforms),

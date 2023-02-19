@@ -26,7 +26,7 @@ class LIDSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='profile.name')
     class Meta:
         model = LinkedInDetail
-        fields = ['date','email','year','name','experience','certifications' ,'projects' ,'publications' ,'skills' ,'linkedin_score']
+        fields = ['date','email','year','name','experience','certifications' ,'projects' ,'publications' ,'linkedin_score','connectionsCount']
 
 # #HackerRankDetailSerializer
 class HRDSerializer(serializers.ModelSerializer):   

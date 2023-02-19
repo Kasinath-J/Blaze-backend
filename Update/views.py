@@ -10,19 +10,19 @@ from .update import Leetcode_update_fn,Github_update_fn,LinkedIn_update_fn,Hacke
 
 from .backup.sheets import backup,scratchUpdate
 
-from datetime import datetime
+from django.utils.timezone import localdate
 
 @api_view(['GET','PUT'])
 def updatePlatforms(request,pk):
 
     if request.method == 'GET':
 
-        ############### Backing details in google sheet############################
+        ############## Backing details in google sheet############################
         try:
             backup()
         except:
             print("Error in backing up")
-        ###########################################################
+        ##########################################################
 
         ret = []
         profile_instances = Profile.objects.all()
@@ -86,14 +86,27 @@ def updatePlatforms(request,pk):
         return Response(ret)
 
     if request.method == 'PUT':
+        print(request.data)
         email = request.data['id']
         try:
-            Leetcode_update_fn(email,request.data['leetcode'])  
-            Github_update_fn(email,request.data['github'])  
-            LinkedIn_update_fn(email,request.data['linkedin'])  
-            Hackerrank_update_fn(email,request.data['hackerrank'])  
-            Codechef_update_fn(email,request.data['codechef'])  
-            Codeforces_update_fn(email,request.data['codeforces'])  
+            if 'leetcode' in request.data:
+                Leetcode_update_fn(email,request.data['leetcode'])  
+                
+            if 'github' in request.data:
+                Github_update_fn(email,request.data['github'])  
+                
+            if 'linkedin' in request.data:
+                LinkedIn_update_fn(email,request.data['linkedin'])  
+                
+            if 'hackerrank' in request.data:
+                Hackerrank_update_fn(email,request.data['hackerrank'])  
+                
+            if 'codechef' in request.data:
+                Codechef_update_fn(email,request.data['codechef'])  
+                
+            if 'codeforces' in request.data:
+                Codeforces_update_fn(email,request.data['codeforces'])  
+                
 
 
             return Response({})
@@ -142,14 +155,13 @@ def updateProblemsAndContest(request):
             created_now = True
         
         try:
-            instance = Problem.objects.all()[0]
-        
+            instances = Problem.objects.all()
+            instance = instances[0]
             if created_now==False:
-                cur_Date = datetime.datetime.now(datetime.timezone.utc).date()
+                cur_Date = localdate()
                 d = instance.date    
                 if  d == cur_Date:
                     return Response({})
-    
             instance.total_easy = request.data['total_easy']
             instance.total_medium = request.data['total_medium']
             instance.total_hard = request.data['total_hard']
@@ -158,7 +170,6 @@ def updateProblemsAndContest(request):
             instance.contest = request.data['contest']
             instance.easy = request.data['problemsEasy']
             instance.medium = request.data['problemsMedium'] 
-
             instance.save()
             return Response({})
 
@@ -166,7 +177,7 @@ def updateProblemsAndContest(request):
             return Response({})
 
 @api_view(['GET'])
-def scraptchUpdate(request):    
+def scratch(request):    
 
     if len(Task.objects.all())>0:
         return Response({"message":"Only one tasks will be updated at a time"})
