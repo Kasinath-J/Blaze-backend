@@ -86,7 +86,6 @@ def updatePlatforms(request,pk):
         return Response(ret)
 
     if request.method == 'PUT':
-        print(request.data)
         email = request.data['id']
         try:
             if 'leetcode' in request.data:
