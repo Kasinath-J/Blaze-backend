@@ -47,7 +47,7 @@ class NewUser(AbstractBaseUser,PermissionsMixin):
         ("2030", "2030"),
     )
 
-    email = models.EmailField(_('email address'), unique=True,primary_key=True)
+    email = models.EmailField(_('email address'), unique=True,primary_key=True,blank=False,null=False)
     year = models.CharField(
         max_length = 20,
         choices = year_choices,
@@ -102,7 +102,7 @@ from django.dispatch import receiver
 
 @receiver(post_save, sender=NewUser)
 def create_favorites(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.is_staff==False:
         Profile.objects.create(id=instance)
 
 # ----------------------------------------------------------------------------------------------------

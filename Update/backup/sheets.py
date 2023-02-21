@@ -15,10 +15,18 @@ spreadsheet_id = '1L_N2j8EHeNIoHhLf6xBdlv_qVQwekNlFz5ZwJx-DjO8'
 credentials = service_account.Credentials.from_service_account_file(secret_file,scopes=scopes)
 service = discovery.build('sheets','v4',credentials=credentials)
 
-def checkNone(s):
+def checkNoneForScratch(s):
     if s=="":
         return None
     return s
+
+def checkNoneForBackup(s):
+    if s==None:
+        return ""
+    return s
+
+def validate_email(e):
+    return len(e.split('@'))==2
 
 def backup():
     # Backingup Profile details
@@ -29,19 +37,18 @@ def backup():
         values = []
         for profile in profiles:
             temp = []
-            temp.append(profile.id.email)
-            temp.append(profile.id.year)
-            temp.append(profile.asi)
-            temp.append(profile.name)
-            temp.append(profile.leetcode)
-            temp.append(profile.github)
-            temp.append(profile.linkedin)
-            temp.append(profile.hackerrank)
-            temp.append(profile.codechef)
-            temp.append(profile.codeforces)
+            temp.append(checkNoneForBackup(profile.id.email))
+            temp.append(checkNoneForBackup(profile.id.year))
+            temp.append(checkNoneForBackup(profile.asi))
+            temp.append(checkNoneForBackup(profile.name))
+            temp.append(checkNoneForBackup(profile.leetcode))
+            temp.append(checkNoneForBackup(profile.github))
+            temp.append(checkNoneForBackup(profile.linkedin))
+            temp.append(checkNoneForBackup(profile.hackerrank))
+            temp.append(checkNoneForBackup(profile.codechef))
+            temp.append(checkNoneForBackup(profile.codeforces))
 
             values.append(temp)
-
 
         length = len(profiles)+10
         length = max(length,250)
@@ -49,6 +56,9 @@ def backup():
         data = {
             'values':values
         }
+
+        service.spreadsheets().values().clear(spreadsheetId=spreadsheet_id, range=range_name).execute()
+
         service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, body=data, range=range_name, valueInputOption='USER_ENTERED').execute()
 
         print("successful profile backup")
@@ -64,20 +74,20 @@ def backup():
         values = []
         for event in events:
             temp = []
-            temp.append(event.name)
-            temp.append(event.date.strftime('%d/%m/%Y'))
-            temp.append(event.officetype)
-            temp.append(event.description)
-            temp.append(event.winner1)
-            temp.append(event.winner2)
-            temp.append(event.winner3)
-            temp.append(event.winner4)
-            temp.append(event.winner5)
-            temp.append(event.imageUrl1)
-            temp.append(event.imageUrl2)
-            temp.append(event.imageUrl3)
-            temp.append(event.imageUrl4)
-            temp.append(event.imageUrl5)
+            temp.append(checkNoneForBackup(event.name))
+            temp.append(checkNoneForBackup(event.date.strftime('%d/%m/%Y')))
+            temp.append(checkNoneForBackup(event.officetype))
+            temp.append(checkNoneForBackup(event.description))
+            temp.append(checkNoneForBackup(event.winner1))
+            temp.append(checkNoneForBackup(event.winner2))
+            temp.append(checkNoneForBackup(event.winner3))
+            temp.append(checkNoneForBackup(event.winner4))
+            temp.append(checkNoneForBackup(event.winner5))
+            temp.append(checkNoneForBackup(event.imageUrl1))
+            temp.append(checkNoneForBackup(event.imageUrl2))
+            temp.append(checkNoneForBackup(event.imageUrl3))
+            temp.append(checkNoneForBackup(event.imageUrl4))
+            temp.append(checkNoneForBackup(event.imageUrl5))
 
             values.append(temp)
 
@@ -87,6 +97,8 @@ def backup():
         data = {
             'values':values
         }
+
+        service.spreadsheets().values().clear(spreadsheetId=spreadsheet_id, range=range_name).execute()
         service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, body=data, range=range_name, valueInputOption='USER_ENTERED').execute()
 
         print("successful events backup")
@@ -102,12 +114,12 @@ def backup():
         values = []
         for bearer in bearers:
             temp = []
-            temp.append(bearer.id.id.email)
-            temp.append(bearer.position)
-            temp.append(bearer.img)
-            temp.append(bearer.rank)
-            temp.append(bearer.present_academic_year)
-            temp.append(bearer.officetype)
+            temp.append(checkNoneForBackup(bearer.id.id.email))
+            temp.append(checkNoneForBackup(bearer.position))
+            temp.append(checkNoneForBackup(bearer.img))
+            temp.append(checkNoneForBackup(bearer.rank))
+            temp.append(checkNoneForBackup(bearer.present_academic_year))
+            temp.append(checkNoneForBackup(bearer.officetype))
 
             values.append(temp)
 
@@ -117,6 +129,8 @@ def backup():
         data = {
             'values':values
         }
+
+        service.spreadsheets().values().clear(spreadsheetId=spreadsheet_id, range=range_name).execute()
         service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, body=data, range=range_name, valueInputOption='USER_ENTERED').execute()
 
         print("successful Office Bearers backup")
@@ -139,52 +153,46 @@ def scratchUpdate():
         response= service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
         response = response['values']
         
+        NewUser.objects.filter(is_staff=False).delete()
         
         for res in response:
+            
+            if isinstance(res[0], str) and validate_email(res[0]): #checking the type as string
 
-            # To make all list of even count and to avaoid exception
-            l = len(res)
-            for i in range(26-l):
-                res.append("")
-        
+                # To make all list of even count and to avaoid exception
+                l = len(res)
+                for i in range(26-l):
+                    res.append("")
+            
 
-            if isinstance(res[0], str): #checking the type as string
-                users = NewUser.objects.filter(pk=res[0])
-                user=None
                 year = res[1] if res[1] in year_choices else "2023"
-                if len(users)==0:
+                try:
+                    temp_user = NewUser(email=res[0],year=year)
+                    temp_user.save()
+                    user = temp_user
+                
                     try:
-                        temp_user = NewUser(email=res[0],year=year)
-                        temp_user.save()
-                        user = temp_user
+                        profile = Profile.objects.get(id__email=res[0])
+
+                    except:
+                        profile = Profile(id=user)
+                        profile.save()
+
+                    try:
+                        profile.asi = True if res[2]=='TRUE' else False
+                        profile.name = checkNoneForScratch(res[3])
+                        profile.leetcode = checkNoneForScratch(res[4])
+                        profile.github = checkNoneForScratch(res[5])
+                        profile.linkedin = checkNoneForScratch(res[6])
+                        profile.hackerrank = checkNoneForScratch(res[7])
+                        profile.codechef = checkNoneForScratch(res[8])
+                        profile.codeforces = checkNoneForScratch(res[9])
+
+                        profile.save()
                     except:
                         pass
-                else:
-                    user = users[0]
-                    user.year = year
-                    user.save()
-                
-                try:
-                    profile = Profile.objects.get(id__email=res[0])
-
                 except:
-                    profile = Profile(id=user)
-                    profile.save()
-
-                try:
-                    profile.asi = True if res[2]=='TRUE' else False
-                    profile.name = checkNone(res[3])
-                    profile.leetcode = checkNone(res[4])
-                    profile.github = checkNone(res[5])
-                    profile.linkedin = checkNone(res[6])
-                    profile.hackerrank = checkNone(res[7])
-                    profile.codechef = checkNone(res[8])
-                    profile.codeforces = checkNone(res[9])
-
-                    profile.save()
-                except:
-                    pass
-                
+                    pass    
     except:
         print("error in Updating Profile details")
 
@@ -196,40 +204,35 @@ def scratchUpdate():
         response= service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
         response = response['values']
         
-        
-        for res in response:
+        Event.objects.all().delete()
 
-            # To make all list of even count and to avoid exception
-            l = len(res)
-            for i in range(26-l):
-                res.append("")        
+        for res in response:     
 
-            if isinstance(res[0], str): #checking the type as string
-                
-                try:
-                    event = Event.objects.get(name=res[0])
-                
-                except:
-                    event = Event(name=res[0])
-                    event.save()
-                
+            if isinstance(res[0], str) and res[0]!=None and res[0]!="": #checking the type as string    
+            
+                # To make all list of even count and to avaoid exception
+                l = len(res)
+                for i in range(26-l):
+                    res.append("")
 
+                event = Event(name=res[0])
+                event.save()         
 
                 try:
                     date = datetime.date(int(res[1].split('/')[2]), int(res[1].split('/')[1]), int(res[1].split('/')[0]))
                     event.date = date
                     event.officetype = res[2] if res[2] in office_choices else "CSBS"
-                    event.description = checkNone(res[3])
-                    event.winner1 = checkNone(res[4])
-                    event.winner2 = checkNone(res[5])
-                    event.winner3 = checkNone(res[6])
-                    event.winner4 = checkNone(res[7])
-                    event.winner5 = checkNone(res[8])
-                    event.imageUrl1 = checkNone(res[9])
-                    event.imageUrl2 = checkNone(res[10])
-                    event.imageUrl3 = checkNone(res[11])
-                    event.imageUrl4 = checkNone(res[12])
-                    event.imageUrl5 = checkNone(res[13])
+                    event.description = checkNoneForScratch(res[3])
+                    event.winner1 = checkNoneForScratch(res[4])
+                    event.winner2 = checkNoneForScratch(res[5])
+                    event.winner3 = checkNoneForScratch(res[6])
+                    event.winner4 = checkNoneForScratch(res[7])
+                    event.winner5 = checkNoneForScratch(res[8])
+                    event.imageUrl1 = checkNoneForScratch(res[9])
+                    event.imageUrl2 = checkNoneForScratch(res[10])
+                    event.imageUrl3 = checkNoneForScratch(res[11])
+                    event.imageUrl4 = checkNoneForScratch(res[12])
+                    event.imageUrl5 = checkNoneForScratch(res[13])
                     event.save()
                 
                 except:
@@ -246,10 +249,11 @@ def scratchUpdate():
         response= service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
         response = response['values']
         
-        
+        OfficeBearer.objects.all().delete()
+
         for res in response:
 
-            # To make all list of even count and to avoid exception
+            # To make all list of even count and to avaoid exception
             l = len(res)
             for i in range(26-l):
                 res.append("")
@@ -260,20 +264,14 @@ def scratchUpdate():
                     profile = Profile.objects.get(pk=res[0])                
 
                     bearer = None
+                    b = OfficeBearer(profile=profile)
+                    b.save()
+                    bearer = b
 
                     try:
-                        b = OfficeBearer.objects.get(profile=profile)
-                        bearer = b
-                    
-                    except:
-                        b = OfficeBearer(profile=profile)
-                        b.save()
-                        bearer = b
-
-                    try:
-                        bearer.position = checkNone(res[1])
-                        bearer.img = checkNone(res[2])
-                        bearer.rank = checkNone(res[3])
+                        bearer.position = checkNoneForScratch(res[1])
+                        bearer.img = checkNoneForScratch(res[2])
+                        bearer.rank = checkNoneForScratch(res[3])
                         bearer.present_academic_year = res[4] if res[4] in academic_year_choices else "2022-2023"
                         bearer.officetype = res[5] if res[5] in office_choices else "CSBS"
                         bearer.save()
