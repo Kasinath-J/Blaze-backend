@@ -87,6 +87,8 @@ def EmailList(request):
         ret=[]
         for inst in instance:
             ret.append({"email":inst.id.email,
-                        "year": inst.id.year})
+                        "year": inst.id.year,
+                        "linkedin": inst.linkedin,
+                        "github":inst.github,})
 
         return Response(ret)
