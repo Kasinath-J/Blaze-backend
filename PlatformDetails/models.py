@@ -27,7 +27,7 @@ class LeetcodeDetail(models.Model):
     def leetcode_score(self):
         score = None
         if self.overall_raking:
-            score = self.overall_raking//1000
+            score = self.overall_raking
         return score
 
     @property
@@ -131,7 +131,7 @@ class CodechefDetail(models.Model):
     def codechef_score(self):
         score = 0
         if self.global_rank!=None:
-            score=self.global_rank//100
+            score=self.global_rank
 
         return score
 
