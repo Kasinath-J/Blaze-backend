@@ -9,13 +9,13 @@ class Event(models.Model):
     # The second element is displayed by the field’s form widget.
 
     office_choices = (
-        ("CSBS","CSBS"),
+        ("CSBSA","CSBSA"),
         ("ASI","Anaytics Society of India"),
     )
 
     date = models.DateField(default=timezone.now)
     name = models.CharField(max_length=50,primary_key=True)
-    officetype = models.CharField(max_length = 100,choices = office_choices,default = 'CSBS',blank=True)
+    officetype = models.CharField(max_length = 100,choices = office_choices,default = 'CSBSA',blank=True)
     description = models.TextField(null=True,blank=True)
     winner1 = models.CharField(max_length=100,null=True,blank=True)
     winner2 = models.CharField(max_length=100,null=True,blank=True)
@@ -50,7 +50,7 @@ class OfficeBearer(models.Model):
     )
 
     office_choices = (
-        ("CSBS","CSBS"),
+        ("CSBSA","CSBSA"),
         ("ASI","Anaytics Society of India"),
     )
 
@@ -60,7 +60,7 @@ class OfficeBearer(models.Model):
     img = models.URLField(max_length=400,null=True,blank=True)
     rank = models.SmallIntegerField(null=True,blank=False,default = 20)
     present_academic_year = models.CharField(max_length = 20,choices = year_choices,default = '2022-2023',blank=True)
-    officetype = models.CharField(max_length = 100,choices = office_choices,default = 'CSBS',blank=True)
+    officetype = models.CharField(max_length = 100,choices = office_choices,default = 'CSBSA',blank=True)
 
     def __str__(self):        
         return self.officetype + '-' + self.position + ' - ' + self.profile.id.email

@@ -142,7 +142,7 @@ def backup():
 @background()
 def scratchUpdate():
     
-    office_choices = ["CSBS","ASI",]
+    office_choices = ["CSBSA","ASI",]
     year_choices=["2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"]
     academic_year_choices = ["2020-2021","2021-2022","2022-2023","2023-2024","2024-2025","2025-2026","2026-2027","2027-2028","2028-2029","2029-2030","2030-2031"]
 
@@ -221,7 +221,7 @@ def scratchUpdate():
                 try:
                     date = datetime.date(int(res[1].split('/')[2]), int(res[1].split('/')[1]), int(res[1].split('/')[0]))
                     event.date = date
-                    event.officetype = res[2] if res[2] in office_choices else "CSBS"
+                    event.officetype = res[2] if res[2] in office_choices else "CSBSA"
                     event.description = checkNoneForScratch(res[3])
                     event.winner1 = checkNoneForScratch(res[4])
                     event.winner2 = checkNoneForScratch(res[5])
@@ -273,7 +273,7 @@ def scratchUpdate():
                         bearer.img = checkNoneForScratch(res[2])
                         bearer.rank = checkNoneForScratch(res[3])
                         bearer.present_academic_year = res[4] if res[4] in academic_year_choices else "2022-2023"
-                        bearer.officetype = res[5] if res[5] in office_choices else "CSBS"
+                        bearer.officetype = res[5] if res[5] in office_choices else "CSBSA"
                         bearer.save()
 
                     except:
