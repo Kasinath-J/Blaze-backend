@@ -130,8 +130,8 @@ class CodechefDetail(models.Model):
     @property
     def codechef_score(self):
         score = 0
-        if self.global_rank!=None:
-            score=self.global_rank
+        if self.problems_solved!=None:
+            score=self.problems_solved
 
         return score
 
